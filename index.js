@@ -1,5 +1,5 @@
 const { parse } = require('url');
-const Buffer = require('safe-buffer').Buffer;
+const { Buffer: Buffer } = require('safe-buffer');
 const fetch = require('node-fetch');
 const { createError } = require('micro');
 const cache = require('micro-cacheable');
@@ -26,7 +26,6 @@ const microFn = async req => {
     }
   );
   const json = await response.json();
-  console.log(response);
 
   if (response.status === 401) {
     throw createError(401, 'The API token is missing or invalid.');
