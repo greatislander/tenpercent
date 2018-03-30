@@ -1,5 +1,5 @@
 const { parse } = require('url');
-const { Buffer: Buffer } = require('safe-buffer');
+const { Buffer } = require('safe-buffer');
 const fetch = require('node-fetch');
 const { createError } = require('micro');
 const cache = require('micro-cacheable');
