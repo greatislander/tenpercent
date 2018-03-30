@@ -9,7 +9,7 @@
     "test": "xo"
   },
   "engines": {
-    "node": ">= 8.11.1"
+    "node": ">= 6.9.4"
   },
   "dependencies": {
     "micro": "^9.1.4",
