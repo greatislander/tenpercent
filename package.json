@@ -11,16 +11,15 @@
   "dependencies": {
     "micro": "^9.1.4",
     "micro-cacheable": "^2.0.1",
-    "node-fetch": "^2.1.2"
+    "node-fetch": "^2.1.2",
+    "safe-buffer": "^5.1.1"
   },
   "devDependencies": {
     "micro-dev": "^2.2.2",
+    "prettier": "^1.11.1",
     "xo": "^0.20.3"
   },
-  "prettier": {
-    "singleQuote": true
-  },
   "xo": {
-    "prettier": true
+    "extends": "prettier"
   }
 }

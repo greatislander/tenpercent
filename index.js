@@ -1,11 +1,11 @@
-const fetch = require('node-fetch');
 const { parse } = require('url');
+const Buffer = require('safe-buffer').Buffer;
+const fetch = require('node-fetch');
 const { createError } = require('micro');
 const cache = require('micro-cacheable');
 
-const microFn = async (req, res) => {
-  let statusCode, data;
-  let token = process.env.TRANSIFEX_API_TOKEN;
+const microFn = async req => {
+  const token = process.env.TRANSIFEX_API_TOKEN;
   let { organization, project, resource } = parse(req.url, true).query;
   if (!organization) {
     throw createError(500, 'You must specify an organization.');
@@ -16,16 +16,16 @@ const microFn = async (req, res) => {
   if (!resource) {
     resource = 0;
   }
-  let response = await fetch(
+  const response = await fetch(
     `https://api.transifex.com/organizations/${organization}/projects/${project}/resources/`,
     {
       headers: {
         Authorization:
-          'Basic ' + new Buffer(`api:${token}`, 'utf8').toString('base64')
+          'Basic ' + Buffer.from(`api:${token}`, 'utf8').toString('base64')
       }
     }
   );
-  let json = await response.json();
+  const json = await response.json();
   console.log(response);
 
   if (response.status === 401) {
@@ -33,16 +33,15 @@ const microFn = async (req, res) => {
   } else if (response.status === 404) {
     throw createError(404, 'The organization or project could not be found.');
   } else if (response.status === 200) {
-    if (json.hasOwnProperty(resource)) {
-      let translated = Number(
+    if (Object.prototype.hasOwnProperty.call(json, resource)) {
+      const translated = Number(
         (json[resource].stats.translated.percentage * 100).toFixed(2)
       );
       return {
         status: translated
       };
-    } else {
-      throw createError(404, 'The resource could not be found.');
     }
+    throw createError(404, 'The resource could not be found.');
   }
 };
 
