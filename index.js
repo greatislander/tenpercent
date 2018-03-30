@@ -1,11 +1,11 @@
-const { parse } = require('url');
-const Buffer = require('safe-buffer').Buffer;
-const fetch = require('node-fetch');
-const { createError } = require('micro');
-const cache = require('micro-cacheable');
+let { parse } = require('url');
+let Buffer = require('safe-buffer').Buffer;
+let fetch = require('node-fetch');
+let { createError } = require('micro');
+let cache = require('micro-cacheable');
 
-const microFn = async req => {
-  const token = process.env.TRANSIFEX_API_TOKEN;
+let microFn = async req => {
+  let token = process.env.TRANSIFEX_API_TOKEN;
   let { organization, project, resource } = parse(req.url, true).query;
   if (!organization) {
     throw createError(500, 'You must specify an organization.');
@@ -16,7 +16,7 @@ const microFn = async req => {
   if (!resource) {
     resource = 0;
   }
-  const response = await fetch(
+  let response = await fetch(
     `https://api.transifex.com/organizations/${organization}/projects/${project}/resources/`,
     {
       headers: {
@@ -25,8 +25,7 @@ const microFn = async req => {
       }
     }
   );
-  const json = await response.json();
-  console.log(response);
+  let json = await response.json();
 
   if (response.status === 401) {
     throw createError(401, 'The API token is missing or invalid.');
@@ -34,7 +33,7 @@ const microFn = async req => {
     throw createError(404, 'The organization or project could not be found.');
   } else if (response.status === 200) {
     if (Object.prototype.hasOwnProperty.call(json, resource)) {
-      const translated = Number(
+      let translated = Number(
         (json[resource].stats.translated.percentage * 100).toFixed(2)
       );
       return {
