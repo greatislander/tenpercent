@@ -8,6 +8,9 @@
     "dev": "micro-dev",
     "test": "xo"
   },
+  "engines": {
+    "nodejs": ">= 8"
+  },
   "dependencies": {
     "micro": "^9.1.4",
     "micro-cacheable": "^2.0.1",
