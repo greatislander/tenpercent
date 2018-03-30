@@ -1,6 +1,6 @@
 # Ten Percent
 
-Ten Percent (l10n percent) is a Node.js microservice which uses the [Transifex REST API](https://docs.transifex.com/api/introduction) to retrieve the localization status of a given Transifex project. I made Ten Percent so that I could use a [Shields.io dynamic badge](http://shields.io/#dynamic-badge) to display the localization status of the [Pressbooks](https://github.com/pressbooks/pressbooks) Open Source project and encourage ongoing localization efforts. Hopefully others will find it useful for their projects as well.
+Ten Percent (l10n percent) is a Node.js microservice which uses the [Transifex REST API](https://docs.transifex.com/api/introduction) to retrieve the localization status of a given Transifex resource. I made Ten Percent so that I could use a [Shields.io dynamic badge](http://shields.io/#dynamic-badge) to display the localization status of the [Pressbooks](https://github.com/pressbooks/pressbooks) Open Source project's resources and encourage ongoing localization efforts. Hopefully others will find it useful for their projects as well.
 
 ## Requirements
 
