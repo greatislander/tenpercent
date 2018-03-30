@@ -36,7 +36,7 @@ If the API token is missing or invalid or if you have specified a non-existent T
 2. Use the URL you determined in step 1 to generate a [Shields.io dynamic badge](http://shields.io/#dynamic-badge) that shows the localization status of your Transifex project. You'll need to set the data type to JSON and the query to `$.status`.
 
 ```
-https://img.shields.io/badge/dynamic/json.svg?url=<URL>&label=<LABEL>&query=$.status.&colorB=<COLOR>&prefix=<PREFIX>&suffix=%25
+https://img.shields.io/badge/dynamic/json.svg?url=<URL>&label=translated&query=$.status.&colorB=<COLOR>&prefix=<PREFIX>&suffix=%25
 ```
 
 This URL will produce the following badge layout with the example response in step 1:
