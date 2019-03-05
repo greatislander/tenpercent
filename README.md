@@ -50,3 +50,8 @@ Now you can add a badge to your GitHub readme which will reflect the current loc
 ## Notes
 
 Responses from the Transifex REST API are cached for 24 hours to prevent excessive API calls, so you may not see the changes immediately.
+
+## Related Work
+
+- https://github.com/transifex/transifex/issues/319
+- https://github.com/niccokunzmann/open-transifex-api/
