@@ -1,0 +1,13 @@
+{
+    "version": 2,
+    "alias": "tenpercent.now.sh",
+    "env": {
+        "TRANSIFEX_API_TOKEN": "@transifex-api-token"
+    },
+    "rewrites": [
+        {
+            "source": "/",
+            "destination": "/api/project"
+        }
+    ]
+}

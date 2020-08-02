@@ -1,7 +1,0 @@
-{
-    "version": 1,
-    "alias": "tenpercent.now.sh",
-    "env": {
-        "TRANSIFEX_API_TOKEN": "@transifex-api-token"
-    }
-}
