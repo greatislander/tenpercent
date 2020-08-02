@@ -7,45 +7,43 @@ Ten Percent (l10n percent) is a Node.js microservice which uses the [Transifex R
 ## Requirements
 
 - A [Transifex API token](https://www.transifex.com/user/settings/api/)
-- A [Now](https://zeit.co/now) account (other hosting services should work too — Heroku, etc.)
-
+- A [Vercel](https://vercel.com) account.
 
 ## Setup
 
-1. Install the [Now CLI](https://zeit.co/download#now-cli) on your device and log in to your Now account.
-2. Add your Transifex API token as a [secret](https://zeit.co/docs/getting-started/secrets):
+1. Install the [Vercel CLI](https://vercel.com/download) on your device and log in to your Vercel account.
+2. Add your Transifex API token as a [secret](https://vercel.com/docs/cli#commands/secrets):
 
-```
-$ now secrets add transifex-api-token "<TOKEN>"
-```
-3. Deploy [greatislander/tenpercent](https://github.com/greatislander/tenpercent/) to [Now](https://zeit.co/docs/features/repositories). Be sure to assign the secret you created in step 2 to the `TRANSIFEX_API_TOKEN` environment variable:
+    ```bash
+    vercel secrets add transifex-api-token "<TOKEN>"
+    ```
 
-```
-$ now greatislander/tenpercent -e TRANSIFEX_API_TOKEN=@transifex-api-token
-```
+3. Deploy [greatislander/tenpercent](https://github.com/greatislander/tenpercent/) to Vercel. Be sure to assign the secret you created in step 2 to the `TRANSIFEX_API_TOKEN` environment variable:
+
+    ```bash
+    vercel greatislander/tenpercent -e TRANSIFEX_API_TOKEN=@transifex-api-token
+    ```
 
 ## Usage
 
-1. Visit your Now deploy, supplying the query parameters for `organization`, `project`, and optionally `resource` (`resource` defaults to `0`, the first resource by numeric index; if the project has multiple resources, you can select the appropriate one by supplying a different value). Verify that the resulting JSON object reflects the localization status of the desired resource (a numeric value corresponding to the percentage translated):
+1. Visit your Vercel deploy, supplying the query parameters for `organization`, `project`, and optionally `resource` (`resource` defaults to `0`, the first resource by numeric index; if the project has multiple resources, you can select the appropriate one by supplying a different value). Verify that the resulting JSON object reflects the localization status of the desired resource (a numeric value corresponding to the percentage translated):
 
-```
-$ curl 'https://<SUBDOMAIN>.now.sh?organization=<ORGANIZATION>&project=<PROJECT>[&resource=<RESOURCE INDEX>]'
-$ {"status":"10"}
-```
+    ```bash
+    $ curl 'https://<SUBDOMAIN>.vercel.app?organization=<ORGANIZATION>&project=<PROJECT>[&resource=<RESOURCE INDEX>]'
+    {"status":"10"}
+    ```
 
-If the API token is missing or invalid or if you have specified a non-existent Transifex organization, project or resource, `status` will provide an error message.
+    If the API token is missing or invalid or if you have specified a non-existent Transifex organization, project or resource, you will see an error message.
 
 2. Use the URL you determined in step 1 to generate a [Shields.io dynamic badge](http://shields.io/#dynamic-badge) that shows the localization status of your Transifex project. You'll need to set the data type to JSON and the query to `$.status`.
 
-```
-https://img.shields.io/badge/dynamic/json.svg?url=<URL>&label=translated&query=$.status.&colorB=<COLOR>&prefix=<PREFIX>&suffix=%25
-```
+    `https://img.shields.io/badge/dynamic/json.svg?url=<URL>&label=translated&query=$.status.&colorB=<COLOR>&prefix=<PREFIX>&suffix=%25`
 
-This URL will produce the following badge layout with the example response in step 1:
+    This URL will produce the following badge layout with the example response in step 1:
 
-![Example Badge](https://img.shields.io/badge/translated-10%25-red.svg)
+    ![Example Badge](https://img.shields.io/badge/translated-10%25-red.svg)
 
-Now you can add a badge to your GitHub readme which will reflect the current localization status of your project.
+    Now you can add a badge to your GitHub readme which will reflect the current localization status of your project.
 
 ## Notes
 
