@@ -20,7 +20,7 @@
   "devDependencies": {
     "micro-dev": "^2.2.2",
     "prettier": "^1.11.1",
-    "xo": "^0.24.0"
+    "xo": "^0.32.1"
   },
   "xo": {
     "extends": "prettier"
