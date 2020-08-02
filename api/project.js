@@ -35,6 +35,7 @@ module.exports = async (request, response) => {
 			const translated = Number(
 				(json[resource].stats.translated.percentage * 100).toFixed(2)
 			);
+			response.setHeader('Cache-Control', 's-maxage=86400');
 			response.status(200).send({
 				status: translated
 			});
