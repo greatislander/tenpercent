@@ -79,13 +79,14 @@ module.exports = async (request, response) => {
 				});
 
 				if (languageExists) {
+					response.setHeader('Cache-Control', 's-maxage=86400');
 					response.status(200).send({
 						status: Number(
 							(translatedStringCount / stringCount * 100).toFixed(2)
 						)
 					});
 				} else {
-					response.status(404).send(`${language} is not a valid language for this project. Valid options: ${validLanguages.join(', ')}`);
+					response.status(404).send(`The language '${language}' was not found in this project. Valid languages: ${validLanguages.join(', ')}`);
 				}
 			} else {
 				const endpoint = `https://api.transifex.com/organizations/${organization}/projects/${project}/resources/${resource}`;
@@ -100,6 +101,7 @@ module.exports = async (request, response) => {
 				);
 				const json = await data.json();
 				if (Object.prototype.hasOwnProperty.call(json.stats, language)) {
+					response.setHeader('Cache-Control', 's-maxage=86400');
 					response.status(200).send({
 						resource: json,
 						status: Number(
@@ -117,6 +119,7 @@ module.exports = async (request, response) => {
 				translatedStringCount += resource.stringcount * resource.stats.translated.percentage;
 			}
 
+			response.setHeader('Cache-Control', 's-maxage=86400');
 			response.status(200).send({
 				status: Number(
 					(translatedStringCount / stringCount * 100).toFixed(2)
@@ -125,6 +128,7 @@ module.exports = async (request, response) => {
 		} else {
 			const element = json.find(element => element.slug === resource);
 
+			response.setHeader('Cache-Control', 's-maxage=86400');
 			response.status(200).send({
 				status: Number(
 					(element.stats.translated.percentage * 100).toFixed(2)
