@@ -1,9 +1,24 @@
 const fetch = require('node-fetch');
 const {Buffer} = require('safe-buffer');
 
+async function fetchResource(organization, project, resource) {
+	const token = process.env.TRANSIFEX_API_TOKEN;
+	const endpoint = `https://api.transifex.com/organizations/${organization}/projects/${project}/resources/${resource}`;
+	const data = await fetch(
+		endpoint,
+		{
+			headers: {
+				Authorization: 'Basic ' + Buffer.from(`api:${token}`, 'utf8').toString('base64')
+			}
+		}
+	);
+	const json = await data.json();
+	return json;
+}
+
 module.exports = async (request, response) => {
 	const token = process.env.TRANSIFEX_API_TOKEN;
-	let {organization, project, resource} = request.query;
+	let {organization, project, resource, language} = request.query;
 	if (!organization) {
 		response.status(500).send('You must specify an organization.');
 	}
@@ -16,7 +31,7 @@ module.exports = async (request, response) => {
 		resource = 'all';
 	}
 
-	const endpoint = (resource === 'all') ? `https://api.transifex.com/organizations/${organization}/projects/${project}/resources/` : `https://api.transifex.com/organizations/${organization}/projects/${project}/resources/${resource}`;
+	const endpoint = `https://api.transifex.com/organizations/${organization}/projects/${project}/resources/`;
 
 	const data = await fetch(
 		endpoint,
@@ -33,7 +48,67 @@ module.exports = async (request, response) => {
 	} else if (data.status === 404) {
 		response.status(404).send('The organization or project could not be found.');
 	} else if (data.status === 200) {
-		if (resource === 'all') {
+		if (language) {
+			// Handle language-specific requests.
+			if (resource === 'all') {
+				let stringCount = 0;
+				let translatedStringCount = 0;
+				let languageExists = true;
+				const validLanguages = [];
+
+				const promises = [];
+
+				for (const element of json) {
+					promises.push(fetchResource(organization, project, element.slug));
+				}
+
+				const resources = await Promise.all(promises);
+
+				resources.forEach(element => {
+					if (Object.prototype.hasOwnProperty.call(element.stats, language)) {
+						stringCount += element.stringcount;
+						translatedStringCount += element.stringcount * element.stats[language].translated.percentage;
+					} else {
+						languageExists = false;
+						if (validLanguages.length === 0) {
+							Object.keys(element.stats).forEach(key => {
+								validLanguages.push(key);
+							});
+						}
+					}
+				});
+
+				if (languageExists) {
+					response.status(200).send({
+						status: Number(
+							(translatedStringCount / stringCount * 100).toFixed(2)
+						)
+					});
+				} else {
+					response.status(404).send(`${language} is not a valid language for this project. Valid options: ${validLanguages.join(', ')}`);
+				}
+			} else {
+				const endpoint = `https://api.transifex.com/organizations/${organization}/projects/${project}/resources/${resource}`;
+
+				const data = await fetch(
+					endpoint,
+					{
+						headers: {
+							Authorization: 'Basic ' + Buffer.from(`api:${token}`, 'utf8').toString('base64')
+						}
+					}
+				);
+				const json = await data.json();
+				if (Object.prototype.hasOwnProperty.call(json.stats, language)) {
+					response.status(200).send({
+						resource: json,
+						status: Number(
+							(json.stats[language].translated.percentage * 100).toFixed(2)
+						)
+					});
+				}
+			}
+		} else if (resource === 'all') {
 			let stringCount = 0;
 			let translatedStringCount = 0;
 
@@ -48,18 +123,12 @@ module.exports = async (request, response) => {
 				)
 			});
 		} else {
-			let stringCount = 0;
-
-			for (const element of Object.values(json.stats)) {
-				stringCount += element.translated.stringcount;
-			}
-
-			const translated = Number(
-				(stringCount / (Object.values(json.stats).length * json.stringcount) * 100).toFixed(2)
-			);
+			const element = json.find(element => element.slug === resource);
 
 			response.status(200).send({
-				status: translated
+				status: Number(
+					(element.stats.translated.percentage * 100).toFixed(2)
+				)
 			});
 		}
 	}
