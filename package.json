@@ -11,7 +11,7 @@
     "node": "12.x"
   },
   "dependencies": {
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "xo": "^0.32.1"
